@@ -61,7 +61,7 @@ def video_details():
 
     try:
         details = get_video_details(url, cookies=COOKIES_PATH, formats=formats)
-        details['developer'] = "pikachufrombd.t.me"
+        details['developer'] = "S4NCHITT.t.me"
         return jsonify({'success': True, 'video_details': details})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
