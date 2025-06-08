@@ -1,11 +1,13 @@
 
 # **YT-DLP API**
 
-![YT-DLP API Logo](https://via.placeholder.com/150)
+![YT-DLP API Logo](https://img.icons8.com/ios/452/youtube-play.png) ![Vercel Logo](https://img.shields.io/badge/deployed_on-Vercel-brightgreen)
 
-Welcome to the **YT-DLP API**! This API allows you to retrieve video details and various download/streaming formats from YouTube using **yt-dlp**. It supports retrieving **video details**, **audio formats**, and **video formats** such as `mp4`, `mp3`, `1080p`, `720p`, and more!
+Welcome to the **YT-DLP API**! 🎉 This API allows you to retrieve video details and various download/streaming formats from YouTube using **yt-dlp**. It supports retrieving **video details**, **audio formats**, and **video formats** such as `mp4`, `mp3`, `1080p`, `720p`, and more!
 
-This project is hosted on [Vercel](https://vercel.com/), making it highly scalable and always available.
+This project is hosted on [Vercel](https://vercel.com/), making it highly scalable and always available. 🚀
+
+[![Deploy on Vercel](https://vercel.com/button)](https://vercel.com/new/project?template=https://github.com/shahadathassan404/ytdl)
 
 ## **Table of Contents**
 
@@ -18,6 +20,8 @@ This project is hosted on [Vercel](https://vercel.com/), making it highly scalab
 - [License](#license)
 - [Developer Info](#developer-info)
 
+---
+
 ## **Features**
 
 - 🎥 **Video Details**: Retrieve title, uploader, views, likes, duration, and more.
@@ -25,6 +29,8 @@ This project is hosted on [Vercel](https://vercel.com/), making it highly scalab
 - 🎬 **Video Formats**: Access multiple video formats such as `mp4`, `1080p`, `720p`, `4k`, etc.
 - 🌐 **Public API**: Easily accessible for anyone to integrate with their own projects.
 - 🚀 **Fast and Scalable**: Hosted on Vercel for optimal performance.
+
+---
 
 ## **Installation**
 
@@ -41,33 +47,37 @@ You can deploy this API by cloning this repository or using the Vercel CLI:
    pip install -r requirements.txt
    ```
 
+---
+
 ## **Usage**
 
 ### **Request Formats**
 
 - **All audio formats** (`mp3`, `aac`, etc.) with video details:
 
-  ```
+  ```bash
   /?url=https://www.youtube.com/watch?v=video_id&format=mp3
   ```
 
 - **All video formats** (`mp4`, `1080p`, etc.) with video details:
 
-  ```
+  ```bash
   /?url=https://www.youtube.com/watch?v=video_id&format=mp4
   ```
 
 - **Specific format** (e.g., `720p`):
 
-  ```
+  ```bash
   /?url=https://www.youtube.com/watch?v=video_id&format=720p
   ```
 
 - **Using video ID instead of URL**:
 
-  ```
+  ```bash
   /?id=video_id&format=mp3
   ```
+
+---
 
 ## **API Documentation**
 
@@ -120,6 +130,8 @@ curl "https://ytdlp-api-psi.vercel.app/?url=https://www.youtube.com/watch?v=vide
 }
 ```
 
+---
+
 ## **Contributing**
 
 We welcome contributions to enhance this API! Please fork the repository and submit a pull request with your improvements.
@@ -130,9 +142,13 @@ We welcome contributions to enhance this API! Please fork the repository and sub
 4. Push the branch (`git push origin feature-branch`).
 5. Submit a pull request.
 
+---
+
 ## **License**
 
 MIT License. See [LICENSE](LICENSE) for more details.
+
+---
 
 ## **Developer Info**
 
@@ -140,6 +156,8 @@ MIT License. See [LICENSE](LICENSE) for more details.
 - 💬 **Telegram**: [PikachuFromBd](https://t.me/PikachuFromBd) ![Telegram](https://img.shields.io/badge/Telegram-%40PikachuFromBd-blue)
 - 🌐 **Website**: [Shahadat Hassan](https://shahadathassan.xyz)
 - 📫 **Contact**: [Telegram](https://t.me/PikachuFromBd)
+
+---
 
 ## **Badges**
 
