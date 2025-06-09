@@ -1,5 +1,8 @@
 import requests, re, os, json
-from flask import Flask, request, Response
+from flask import Flask, Response, request
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 
@@ -58,11 +61,7 @@ def get_info():
                 "channelTitle": data.get("channelTitle"),
                 "lengthSeconds": data.get("lengthSeconds"),
                 "viewCount": data.get("viewCount"),
-                "largestThumbnailUrl": max(
-                    data.get("thumbnail", []), 
-                    key=lambda x: x.get("width", 0), 
-                    default={}
-                ).get("url")
+                "largestThumbnailUrl": max(data.get("thumbnail", []), key=lambda x: x.get("width", 0), default={}).get("url")
             }
         })
 
@@ -82,19 +81,18 @@ def get_info():
 
         for fmt in data.get("formats", []):
             mt = fmt.get("mimeType", "")
-            if mt.startswith("video/"):
-                add(vids, fmt, "combined")
-            elif mt.startswith("audio/"):
-                add(auds, fmt, "audio-only")
+            if mt.startswith("video/"): add(vids, fmt, "combined")
+            elif mt.startswith("audio/"): add(auds, fmt, "audio-only")
 
         for fmt in data.get("adaptiveFormats", []):
             mt = fmt.get("mimeType", "")
-            if mt.startswith("video/") and "qualityLabel" in fmt:
-                add(vids, fmt, "video-only")
-            elif mt.startswith("audio/") and "audioQuality" in fmt:
-                add(auds, fmt, "audio-only")
+            if mt.startswith("video/") and "qualityLabel" in fmt: add(vids, fmt, "video-only")
+            elif mt.startswith("audio/") and "audioQuality" in fmt: add(auds, fmt, "audio-only")
 
-        vids.sort(key=lambda f: int(f.get("qualityLabel", "0p").rstrip("p") or 0), reverse=True)
+        vids.sort(
+            key=lambda f: int(re.search(r"\d+", f.get("qualityLabel", "0")).group()) if f.get("qualityLabel") else 0,
+            reverse=True
+        )
         auds.sort(key=lambda f: f.get("audioQuality", ""), reverse=True)
 
         res["formats"] = {"video_streams": vids, "audio_streams": auds}
