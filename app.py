@@ -1,6 +1,4 @@
-import requests
-import re
-import os
+import requests, re, os
 from flask import Flask, jsonify, request
 
 app = Flask(__name__)
