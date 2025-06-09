@@ -13,7 +13,7 @@ RAPIDAPI_HEADERS = {
     "sec-ch-ua-platform": '"Android"',
     "user-agent": "Mozilla/5.0 (Linux; Android 8.0.0; SM-G955U) AppleWebKit/537.36 Chrome/137.0.0.0 Mobile Safari/537.36 Edg/137.0.0.0",
     "x-rapidapi-host": "yt-api.p.rapidapi.com",
-    "x-rapidapi-key": "1fc10b277emsh7fc9cdb93203423p1356e6jsn39b76272b20f"
+    "x-rapidapi-key": os.environ.get("X")
 }
 
 def extract_video_id(url):
