@@ -1,5 +1,5 @@
 import requests, re, os, json
-from flask import Flask, jsonify, request
+from flask import Flask, request, Response
 
 app = Flask(__name__)
 
@@ -58,7 +58,11 @@ def get_info():
                 "channelTitle": data.get("channelTitle"),
                 "lengthSeconds": data.get("lengthSeconds"),
                 "viewCount": data.get("viewCount"),
-                "largestThumbnailUrl": max(data.get("thumbnail", []), key=lambda x: x.get("width", 0), default={}).get("url")
+                "largestThumbnailUrl": max(
+                    data.get("thumbnail", []), 
+                    key=lambda x: x.get("width", 0), 
+                    default={}
+                ).get("url")
             }
         })
 
@@ -78,13 +82,17 @@ def get_info():
 
         for fmt in data.get("formats", []):
             mt = fmt.get("mimeType", "")
-            if mt.startswith("video/"): add(vids, fmt, "combined")
-            elif mt.startswith("audio/"): add(auds, fmt, "audio-only")
+            if mt.startswith("video/"):
+                add(vids, fmt, "combined")
+            elif mt.startswith("audio/"):
+                add(auds, fmt, "audio-only")
 
         for fmt in data.get("adaptiveFormats", []):
             mt = fmt.get("mimeType", "")
-            if mt.startswith("video/") and "qualityLabel" in fmt: add(vids, fmt, "video-only")
-            elif mt.startswith("audio/") and "audioQuality" in fmt: add(auds, fmt, "audio-only")
+            if mt.startswith("video/") and "qualityLabel" in fmt:
+                add(vids, fmt, "video-only")
+            elif mt.startswith("audio/") and "audioQuality" in fmt:
+                add(auds, fmt, "audio-only")
 
         vids.sort(key=lambda f: int(f.get("qualityLabel", "0p").rstrip("p") or 0), reverse=True)
         auds.sort(key=lambda f: f.get("audioQuality", ""), reverse=True)
