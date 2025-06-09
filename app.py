@@ -1,4 +1,4 @@
-import requests, re, os
+import requests, re, os, json
 from flask import Flask, jsonify, request
 
 app = Flask(__name__)
@@ -18,8 +18,8 @@ RAPIDAPI_HEADERS = {
 
 def extract_video_id(url):
     patterns = [
-        r"(?:https?://)?(?:www\.)?youtu\.be/([^\?\&]+)",
-        r"(?:https?://)?(?:www\.)?youtube\.com/watch\?v=([^\&]+)"
+        r"(?:youtu\.be/)([^&\n?#]+)",
+        r"(?:v=)([^&\n?#]+)"
     ]
     for pattern in patterns:
         match = re.search(pattern, url)
@@ -29,11 +29,11 @@ def extract_video_id(url):
 
 @app.route('/')
 def home():
-    return jsonify({
+    return Response(json.dumps({
         "developer_info": "Dev: S4NCHITT.t.me",
         "message": "Use /api?url=https://youtube.com/watch?v=...",
         "example": "/api?url=https://youtu.be/BWczaSneA0Q"
-    })
+    }, indent=2), mimetype='application/json')
 
 @app.route('/api')
 def get_info():
@@ -41,21 +41,26 @@ def get_info():
     full_url = request.args.get("url")
     video_id = extract_video_id(full_url) if full_url else None
     if not video_id:
-        return jsonify({**res, "status": "error", "message": "Missing or invalid YouTube URL."}), 400
+        res.update({"status": "error", "message": "Missing or invalid YouTube URL."})
+        return Response(json.dumps(res, indent=2), mimetype='application/json', status=400)
 
     try:
         r = requests.get(RAPIDAPI_URL, headers=RAPIDAPI_HEADERS, params={"id": video_id})
         r.raise_for_status()
         data = r.json()
 
-        res["video_info"] = {
-            "id": data.get("id"),
-            "title": data.get("title"),
-            "channelTitle": data.get("channelTitle"),
-            "lengthSeconds": data.get("lengthSeconds"),
-            "viewCount": data.get("viewCount"),
-            "largestThumbnailUrl": max(data.get("thumbnail", []), key=lambda x: x.get("width", 0), default={}).get("url")
-        }
+        res.update({
+            "message": "Video information found.",
+            "status": "success",
+            "video_info": {
+                "id": data.get("id"),
+                "title": data.get("title"),
+                "channelTitle": data.get("channelTitle"),
+                "lengthSeconds": data.get("lengthSeconds"),
+                "viewCount": data.get("viewCount"),
+                "largestThumbnailUrl": max(data.get("thumbnail", []), key=lambda x: x.get("width", 0), default={}).get("url")
+            }
+        })
 
         vids, auds = [], []
 
@@ -85,12 +90,11 @@ def get_info():
         auds.sort(key=lambda f: f.get("audioQuality", ""), reverse=True)
 
         res["formats"] = {"video_streams": vids, "audio_streams": auds}
-        res["status"] = "success"
-        res["message"] = "Video information retrieved."
-        return jsonify(res)
+        return Response(json.dumps(res, indent=2), mimetype='application/json')
 
     except Exception as e:
-        return jsonify({**res, "status": "error", "message": str(e)}), 500
+        res.update({"status": "error", "message": str(e)})
+        return Response(json.dumps(res, indent=2), mimetype='application/json', status=500)
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=7860)
+    app.run(host='0.0.0.0', port=7860)
